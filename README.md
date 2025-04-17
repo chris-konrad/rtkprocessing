@@ -89,7 +89,7 @@ After completion of `.sbp`-file decoding and RTK GNSS correction, `batch_sbp2pos
 
 ## Authors
 
-- Christoph M. Schmidt, c.m.schmidt@tudelft.nl
+- Christoph M. Konrad, c.m.schmidt@tudelft.nl
 
 License
 --------------------
