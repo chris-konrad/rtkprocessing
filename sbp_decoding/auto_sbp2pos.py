@@ -19,7 +19,7 @@ def get_timespans(sbp_dir, report_subdir='report'):
     """ Extract the timespan of each sbp file form the corresponding report. Requires that sbp2report has run already."""
 
     timespans = []
-    sbp_filenames = [os.path.splitext(f)[0] for f in os.listdir() if os.path.isfile(os.path.join(sbp_dir, f))]
+    sbp_filenames = [os.path.splitext(f)[0] for f in os.listdir() if f.endswith(".sbp")]
     pattern = r"%Y-%m-%d %H:%M:%S.%f"
 
     for fname in sbp_filenames:
@@ -171,14 +171,14 @@ def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_p
 
     # Download correction data
     corr_filenames = get_correction_filenames(sbp_dir)
-    corr_filenames_missing = [cfname for cfname in corr_filenames if not os.path.isfile(os.path.join(corr_dir, cfname.split("/")[-1]))]
+    corr_filenames_missing = [cfname for cfname in corr_filenames if not os.path.isfile(os.path.join(corr_dir, os.path.splitext(cfname.split("/")[-1])[0]))]
     corr_filenames_missing.sort()
-    corr_filenames_existing = [cfname.split("/")[-1] for cfname in corr_filenames if os.path.isfile(os.path.join(corr_dir, cfname.split("/")[-1]))]
+    corr_filenames_existing = [cfname.split("/")[-1] for cfname in corr_filenames if os.path.isfile(os.path.join(corr_dir, os.path.splitext(cfname.split("/")[-1])[0]))]
     corr_filenames_existing.sort()
     if len(corr_filenames_existing) > 0:
         print(f"Found {len(corr_filenames_existing)}/{len(corr_filenames)} required correction data files.")
         for cfname in corr_filenames_existing:
-            print(f"   {cfname}")
+            print(f"   {os.path.splitext(cfname)[0]}")
     if len(corr_filenames_missing) > 0:
         print(f"Missing {len(corr_filenames_missing)}/{len(corr_filenames)} required correction data files.")
         download_correction_files(corr_filenames_missing, host, corr_dir, suppress_download_prompt=suppress_download_prompt)
@@ -194,6 +194,7 @@ def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_p
     
     print("Apply RTK corrections:")
     for sbp_file in sbp_files:
+    
         fname_no_ext = os.path.splitext(sbp_file)[0]
         print(f"{fname_no_ext} ... ", end="")
 
@@ -201,6 +202,10 @@ def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_p
         pos_output = os.path.join(sbp_dir, SOLUTION_OUT, f"{fname_no_ext}.pos")
         obs_file = os.path.join(sbp_dir, RINEX_OUT, f"{fname_no_ext}.obs")
         nav_file = os.path.join(sbp_dir, RINEX_OUT, f"{fname_no_ext}.nav")
+        if os.path.isfile(pos_output):
+            print("Found existing .pos file. Skip!")
+            continue
+
         subprocess.run([
             "rnx2rtkp",
             "-k", os.path.join(corr_dir, conf_fname),
