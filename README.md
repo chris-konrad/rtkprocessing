@@ -35,7 +35,7 @@ Install`batch_sbp2pos`.
 
 1. Clone this repository. 
 
-    `git clone https://github.com/chrismo-schmidt/swiftnav_processing.git`
+    `git clone https://github.com/chris-konrad/swiftnav_processing.git`
 
 2. Add `PATH-TO-THIS-REPO/swiftnav_processing/sbp_decoding/` to your PATH variable. Replace `PATH-TO-THIS-REPO` with the absolute Path to the the location where you cloned this repo to.
 
@@ -75,7 +75,7 @@ Correction data can be obtained from a nearby permanent fixed GNSS arrays. In th
 
 RTKLib need a config file for RTK GNSS correction. To create a custom config file for your needs, run `rtkpost.exe` from the RTKLib binaries and click *<u>O</u>ptions...* . After choosing the desired configuration, hit *<u>S</u>ave...* and save the config file to `DATA_DIRECTORY/correction_data/` using the filename `rtklib-swiftnav.conf`. 
 
-An [example configuration file](https://github.com/chrismo-schmidt/swiftnav_processing/blob/main/sbp_processing/rtklib-swiftnav.conf) for SBP-files created by the SWIFTNav Piksi Multi v2 is provided in this repository. 
+An [example configuration file](https://github.com/chris-konrad/swiftnav_processing/blob/main/sbp_processing/rtklib-swiftnav.conf) for SBP-files created by the SWIFTNav Piksi Multi v2 is provided in this repository. 
 
 ### Output
 
@@ -89,9 +89,9 @@ After completion of `.sbp`-file decoding and RTK GNSS correction, `batch_sbp2pos
 
 ## Authors
 
-- Christoph M. Konrad, c.m.schmidt@tudelft.nl
+- Christoph M. Konrad, c.m.konrad@tudelft.nl
 
 License
 --------------------
 
-This software is licensed under the terms of the [MIT license](https://github.com/chrismo-schmidt/swiftnav_processing/blob/main/LICENSE).
+This software is licensed under the terms of the [MIT license](https://github.com/chris-konrad/swiftnav_processing/blob/main/LICENSE).
