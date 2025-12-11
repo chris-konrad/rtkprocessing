@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 from ftplib import FTP
 import gzip
 import shutil
+import warnings
 
 def get_timespans(sbp_dir, report_subdir='report'):
     """ Extract the timespan of each sbp file form the corresponding report. Requires that sbp2report has run already."""
@@ -107,7 +108,7 @@ def download_correction_files(files, host, download_dir, suppress_download_promp
         raise e
 
 
-def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_prompt=False):
+def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_prompt=False, conf_file=None):
     print(f"Processing SBP files in {sbp_dir}:")
 
     # Define in-/output directories
@@ -184,13 +185,15 @@ def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_p
         download_correction_files(corr_filenames_missing, host, corr_dir, suppress_download_prompt=suppress_download_prompt)
 
     # Check for .conf file
-    conf_files = glob.glob(os.path.join(corr_dir, "*.conf"))
-    if not conf_files:
-        print(f"No .conf file found in {corr_dir}")
-        sys.exit(1)
-    conf_fname = os.path.basename(conf_files[0])
-    print(f"Found config file: {os.path.join(corr_dir, conf_fname)}")
-
+    if conf_file is None:
+        conf_files = glob.glob(os.path.join(corr_dir, "*.conf"))
+        if not conf_files:
+            print(f"No .conf file found in {corr_dir}")
+            sys.exit(1)
+        conf_file = conf_files[0]
+        if len(conf_files)>1:
+            warnings.warn(f"More then one config file in '{corr_dir}'! Using first.")
+    print(f"Using config file: {conf_file}")
     
     print("Apply RTK corrections:")
     for sbp_file in sbp_files:
@@ -208,7 +211,7 @@ def process_sbp_files(sbp_dir, host, station, corr_dir=None, suppress_download_p
 
         subprocess.run([
             "rnx2rtkp",
-            "-k", os.path.join(corr_dir, conf_fname),
+            "-k", conf_file,
             "-o", pos_output,
             obs_file,
             os.path.join(corr_dir, "*.crx"),
@@ -236,13 +239,14 @@ def parse_args():
     parser = argparse.ArgumentParser(
         prog=f"auto_sbp2pos.py",
         description=(f"Automatically walk a folder tree, find all directories containing .sbp files, "
-                      "download correction data, perform GNSS correction and export to .pos")
+                      "download correction data, perform RTK-GNSS correction and export to .pos")
     )
-    parser.add_argument("-d", "--dir", required = True, type=str, help="Root directory. All directories containing .sbp below this directory will be processed.")
-    parser.add_argument("-f", "--ftphost", type=str, default="gnss1.tudelft.nl", help="FTP host to download correction data from. Must accept anonymous connections. The default is gnss1.tudelft.nl")
-    parser.add_argument("-c", "--correction_data_dir", type=str, default='{DIR}/correction_data', help="Correction data directory. Default is {DIR}/correction_data")
-    parser.add_argument("-s", "--station", type=str, default="DELF00NLD", help="The base station to download data from. The default is the EWI-tower (DELF00NLD)")
-    parser.add_argument("-a", "--always_connect", action="store_true", help="Suppress connection prompt when downloading correction data.")
+    parser.add_argument("--dir", required = True, type=str, help="Root directory. All directories containing .sbp below this directory will be processed.")
+    parser.add_argument("--ftphost", type=str, default="gnss1.tudelft.nl", help="FTP host to download correction data from. Must accept anonymous connections. The default is gnss1.tudelft.nl")
+    parser.add_argument("--corrdir", type=str, default='{DIR}/correction_data', help="Correction data directory. Default is {DIR}/correction_data")
+    parser.add_argument("--station", type=str, default="DELF00NLD", help="The base station to download data from. The default is the EWI-tower (DELF00NLD)")
+    parser.add_argument("--connect", action="store_true", help="Suppress prompt asking for connection when downloading correction data.")
+    parser.add_argument("--rtkconfig", type=str, default='{DIR}/correction_data/*.conf', help="Specify the RTKLib config file. If not specified, the correction data directory is searched for a *.conf file.")
 
     return parser.parse_args()
 
@@ -251,15 +255,22 @@ def main():
     args = parse_args()
     sbp_directories = get_sbp_dirs(args.dir)
 
-    if args.correction_data_dir=='{DIR}/correction_data':
+    if args.corrdir=='{DIR}/correction_data':
         corr_dir = os.path.join(args.dir, "correction_data")
         if not os.path.isdir(corr_dir):
             os.makedirs(corr_dir)
     else:
-        corr_dir = args.correction_data_dir
+        corr_dir = args.corrdir
+
+    if args.corrdir=='{DIR}/correction_data/*.conf':
+        conf_file=None
+    else:
+        if not os.path.isfile(args.rtkconfig):
+            raise FileNotFoundError(f"Can't find RTKLib config file at '{args.rtkconfig}'")
+        conf_file = args.rtkconfig
 
     for sbp_dir in sbp_directories:
-        process_sbp_files(sbp_dir, args.ftphost, args.station, corr_dir=corr_dir, suppress_download_prompt=args.always_connect)
+        process_sbp_files(sbp_dir, args.ftphost, args.station, corr_dir=corr_dir, conf_file=conf_file, suppress_download_prompt=args.connect)
 
 if __name__ == "__main__":
     main()
