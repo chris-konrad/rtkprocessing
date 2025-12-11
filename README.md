@@ -35,7 +35,7 @@ Install`batch_sbp2pos`.
 
 1. Clone this repository. 
 
-    `git clone https://github.com/chris-konrad/swiftnav_processing.git`
+    `git clone https://github.com/chris-konrad/rtkprocessing.git`
 
 2. Install the package and it's dependencies. Refer to `pyproject.toml` for an overview of the dependencies. 
 
@@ -57,7 +57,7 @@ The host adress (`--ftphost`) and GNSS base station (`--station`) can be configu
 
 RTKLib needs a config file for RTK GNSS correction. To create a custom config file for your needs, run `rtkpost.exe` from the RTKLib binaries and click *<u>O</u>ptions...* . After choosing the desired configuration, hit *<u>S</u>ave...* and save the config file to `DATA_DIRECTORY/correction_data/` using the filename `rtklib-swiftnav.conf`. 
 
-An [example configuration file](https://github.com/chris-konrad/swiftnav_processing/blob/main/config/rtklib-swiftnav.conf) for SBP-files created by the SWIFTNav Piksi Multi v2 is provided in this repository. 
+An [example configuration file](https://github.com/chris-konrad/rtkprocessing/blob/main/config/rtklib-swiftnav.conf) for SBP-files created by the SWIFTNav Piksi Multi v2 is provided in this repository. 
 
 ## Usage
 The program automatically walks a folder tree, finds all directories containing .sbp files, downloads correction data, performs RTK-GNSS correction and exports the results to .pos. 
@@ -95,7 +95,7 @@ After completion of `.sbp`-file decoding and RTK GNSS correction, `rtkprocessing
 
 This Python package is an elaborate update to the old bash script. It expands the scripts functions by automatically traversing directories and automatically downloading correction data. 
 
-For reference, the old bash script is still available in [`scripts/`](https://github.com/chris-konrad/swiftnav_processing/blob/main/scripts/)
+For reference, the old bash script is still available in [`scripts/`](https://github.com/chris-konrad/rtkprocessing/blob/main/scripts/)
 
 ## Authors
 
@@ -104,4 +104,4 @@ For reference, the old bash script is still available in [`scripts/`](https://gi
 License
 --------------------
 
-This software is licensed under the terms of the [MIT license](https://github.com/chris-konrad/swiftnav_processing/blob/main/LICENSE).
+This software is licensed under the terms of the [MIT license](https://github.com/chris-konrad/rtkprocessing/blob/main/LICENSE).
