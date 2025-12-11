@@ -92,6 +92,12 @@ After completion of `.sbp`-file decoding and RTK GNSS correction, `rtkprocessing
 
 - `solution/` Contains the RTKLib output with the corrected GNSS data in the form of `.pos` files. These files can be interpreted by any text editor and contain the corrected position trajectories corresponding to the sbp logs. 
 
+## Old `batch_sbp2pos.bat`
+
+This Python package is an elaborate update to the old bash script. It expands the scripts functions by automatically traversing directories and automatically downloading correction data. 
+
+For reference, the old bash script is still availabel in [`scripts/`](https://github.com/chris-konrad/swiftnav_processing/blob/main/scripts/)
+
 ## Authors
 
 - Christoph M. Konrad, c.m.konrad@tudelft.nl
