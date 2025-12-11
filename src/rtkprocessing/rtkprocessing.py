@@ -30,9 +30,11 @@ def get_timespans(sbp_dir, report_subdir='report'):
 
         data = pd.read_csv(fpath)
         
+        i0 = max(data['UTC Time'].first_valid_index(), data['UTC Date'].first_valid_index())
+        i1 = min(data['UTC Time'].last_valid_index(), data['UTC Date'].last_valid_index())
         
-        begin = f"{data['UTC Date'].iloc[0]} {data['UTC Time'].iloc[0]}"
-        end = f"{data['UTC Date'].iloc[-1]} {data['UTC Time'].iloc[-1]}"
+        begin = f"{data['UTC Date'].iloc[i0]} {data['UTC Time'].iloc[i0]}"
+        end = f"{data['UTC Date'].iloc[i1]} {data['UTC Time'].iloc[i1]}"
 
         span = (datetime.strptime(begin, pattern), datetime.strptime(end, pattern))
         timespans.append(span)
@@ -262,7 +264,7 @@ def main():
     else:
         corr_dir = args.corrdir
 
-    if args.corrdir=='{DIR}/correction_data/*.conf':
+    if args.rtkconfig=='{DIR}/correction_data/*.conf':
         conf_file=None
     else:
         if not os.path.isfile(args.rtkconfig):
