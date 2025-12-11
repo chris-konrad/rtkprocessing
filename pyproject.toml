@@ -1,0 +1,28 @@
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rtkprocessing"
+version = "2.0.0"
+description = "Run RTK postprocessing on SwiftNav GNSS logs"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = [
+    "LICENSE",
+]
+authors = [
+    {name = "Christoph M. Konrad", email = "c.m.konrad@tudelft.nl"}
+]
+dependencies = [
+    "pandas",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]  
+
+[project.scripts]
+rtkprocessing = "rtkprocessing.rtkprocessing:main"
+
