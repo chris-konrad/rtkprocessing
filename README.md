@@ -62,6 +62,8 @@ An [example configuration file](https://github.com/chris-konrad/swiftnav_process
 ## Usage
 The program automatically walks a folder tree, finds all directories containing .sbp files, downloads correction data, performs RTK-GNSS correction and exports the results to .pos. 
 
+To run the program open a command prompt and execute the following:
+
 `rtkprocessing [-h] --dir DIR [--ftphost FTPHOST] [--corrdir CORRDIR] [--station STATION] [--rtkconfig RTKCONFIG] [--connect] `
 
 #### Options:
@@ -79,9 +81,6 @@ The program automatically walks a folder tree, finds all directories containing 
 #### Notes:
 - `.sbp` for whom RTK correction results already exist are skipped.
 
-
-To run batch `.sbp` file processing, open a command prompt and execute the following.
-
 #### Output:
 
 After completion of `.sbp`-file decoding and RTK GNSS correction, `rtkprocessing` stores the results and intermediate results in three new subdirectories next to each `.sbp` file:
@@ -96,7 +95,7 @@ After completion of `.sbp`-file decoding and RTK GNSS correction, `rtkprocessing
 
 This Python package is an elaborate update to the old bash script. It expands the scripts functions by automatically traversing directories and automatically downloading correction data. 
 
-For reference, the old bash script is still availabel in [`scripts/`](https://github.com/chris-konrad/swiftnav_processing/blob/main/scripts/)
+For reference, the old bash script is still available in [`scripts/`](https://github.com/chris-konrad/swiftnav_processing/blob/main/scripts/)
 
 ## Authors
 
