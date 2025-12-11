@@ -239,9 +239,9 @@ def get_sbp_dirs(root_dir):
 def parse_args():
 
     parser = argparse.ArgumentParser(
-        prog=f"auto_sbp2pos.py",
+        prog=f"rtkprocessing",
         description=(f"Automatically walk a folder tree, find all directories containing .sbp files, "
-                      "download correction data, perform RTK-GNSS correction and export to .pos")
+                      "download correction data, perform RTK-GNSS correction and export to .pos.")
     )
     parser.add_argument("--dir", required = True, type=str, help="Root directory. All directories containing .sbp below this directory will be processed.")
     parser.add_argument("--ftphost", type=str, default="gnss1.tudelft.nl", help="FTP host to download correction data from. Must accept anonymous connections. The default is gnss1.tudelft.nl")
